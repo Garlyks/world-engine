@@ -27,6 +27,8 @@ interface ItemRepository : JpaRepository<Item, String> {
             maxYposition: Int
     ): List<Item>
 
+    fun deleteAllByWorldId(worldId: String)
+
 }
 
 

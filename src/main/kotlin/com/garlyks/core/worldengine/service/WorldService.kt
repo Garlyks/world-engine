@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service
 @Service
 class WorldService(private val worldRepository: WorldRepository) {
 
+    fun getAllWorlds(): List<World> {
+        return worldRepository.findAll()
+    }
+
     fun createWorld(world: World): World {
         return worldRepository.save(world)
     }

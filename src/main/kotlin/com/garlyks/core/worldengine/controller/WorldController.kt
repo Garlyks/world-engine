@@ -14,12 +14,17 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/api/v1/worlds")
+@CrossOrigin
 class WorldController(
         private val worldService: WorldService
 ) {
 
+    @GetMapping
+    fun getAllWorldStatus(): ResponseEntity<List<WorldDTO>> {
+        return ResponseEntity.ok(worldService.getAllWorlds().map { world -> world.toDTO() })
+    }
+
     @GetMapping("{id}")
-    @CrossOrigin
     fun getWorldStatus(
             @PathVariable id: String
     ): ResponseEntity<WorldDTO> {
@@ -34,5 +39,4 @@ class WorldController(
 
         return ResponseEntity.created(location).body(world)
     }
-
 }

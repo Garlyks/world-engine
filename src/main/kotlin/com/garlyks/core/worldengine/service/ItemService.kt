@@ -6,6 +6,7 @@ import com.garlyks.core.worldengine.exception.InvalidParameterException
 import com.garlyks.core.worldengine.exception.ResourceNotFoundException
 import com.garlyks.core.worldengine.repository.ItemRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ItemService(
@@ -29,4 +30,11 @@ class ItemService(
     fun getItem(id: String): Item {
         return itemRepository.findById(id).orElseThrow{ResourceNotFoundException("Item $id not found")}
     }
+
+    @Transactional
+    fun deleteAllItems(worldId:String) {
+         itemRepository.deleteAllByWorldId(worldId)
+    }
+
+
 }

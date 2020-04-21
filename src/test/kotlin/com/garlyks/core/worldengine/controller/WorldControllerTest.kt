@@ -10,6 +10,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.getForEntity
 import java.util.UUID
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,7 +24,8 @@ internal class WorldControllerTest {
     @Test
     fun getWorldRespondNotFound() {
         assertThrows(HttpClientErrorException.NotFound::class.java) {
-            restTemplate.getForEntity("http://localhost:$port/api/v1/worlds/${UUID.randomUUID()}", WorldDTO::class.java) }
+            restTemplate.getForEntity("http://localhost:$port/api/v1/worlds/${UUID.randomUUID()}", WorldDTO::class.java)
+        }
     }
 
     @Test
@@ -38,5 +40,17 @@ internal class WorldControllerTest {
         Assertions.assertThat(responseCreate.statusCodeValue).isEqualTo(201)
         Assertions.assertThat(responseGet.statusCodeValue).isEqualTo(200)
         Assertions.assertThat(world).isEqualToIgnoringGivenFields(responseGet.body, "id")
+    }
+
+    @Test
+    fun getAllWorlds() {
+        val world = Fixtures.world().toDTO()
+
+        val responseCreate = restTemplate.postForEntity("http://localhost:$port/api/v1/worlds", world, WorldDTO::class.java)
+        val responseGet = restTemplate.getForEntity<List<WorldDTO>>("http://localhost:$port/api/v1/worlds")
+
+        Assertions.assertThat(responseCreate.statusCodeValue).isEqualTo(201)
+        Assertions.assertThat(responseGet.statusCodeValue).isEqualTo(200)
+        Assertions.assertThat(responseGet.body!!.size).isEqualTo(1)
     }
 }

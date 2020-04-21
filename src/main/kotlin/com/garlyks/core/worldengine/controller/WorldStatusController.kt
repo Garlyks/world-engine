@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/worlds/{worldId}/status")
+@CrossOrigin
 class WorldStatusController(
         private val worldStatusService: WorldStatusService
 ){
 
     @GetMapping
-    @CrossOrigin
     fun getWorldStatus(
             @PathVariable worldId: String,
             @RequestParam x: Int? = 0,
@@ -26,10 +26,10 @@ class WorldStatusController(
     ): WorldStatusResponse {
         return WorldStatusResponse(objects = worldStatusService.getWorldStatus(
                 worldId = worldId,
-                minXposition = x,
-                minYposition = y,
-                maxXposition = width,
-                maxYposition = height
+                x = x ?: 0,
+                y = y ?: 0,
+                width = width,
+                height = height
         ).map { item -> item.toDTO() })
     }
 
